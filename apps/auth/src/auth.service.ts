@@ -21,12 +21,7 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise<Omit<User, 'password'>> {
-    console.log('auth service validateUser email: ' + email);
-    console.log('auth service validateUser password: ' + password);
-
     const user = await this.usersService.verifyUser(email, password);
-    console.log('check line');
-
     if (user && (await bcrypt.compare(password, user.password))) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
@@ -38,7 +33,7 @@ export class AuthService {
   }
 
   async login(user: LoginUserDto, response: Response): Promise<any> {
-    console.log('auth service login user: ' + JSON.stringify(user));
+
     const payload = { email: user.email, sub: user._id };
     const expiresIn = await this.configService.get('JWT_EXPIRATION');
     const accessToken = this.jwtService.sign(payload);
