@@ -6,6 +6,7 @@ import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { User } from 'apps/users/src/models/user.schema';
 import { LoginUserDto } from './dto/login.dto';
+import { CreateUserDto } from 'apps/users/src/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -33,7 +34,6 @@ export class AuthService {
   }
 
   async login(user: LoginUserDto, response: Response): Promise<any> {
-
     const payload = { email: user.email, sub: user._id };
     const expiresIn = await this.configService.get('JWT_EXPIRATION');
     const accessToken = this.jwtService.sign(payload);
@@ -43,11 +43,11 @@ export class AuthService {
     });
   }
 
-  async register(req): Promise<any> {
-    const hashedPassword = await bcrypt.hash(req.password, 10);
+  async register(createUserDto: CreateUserDto): Promise<any> {
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
     const user = await this.usersService.createUser({
-      ...req,
+      ...createUserDto,
       password: hashedPassword,
     });
 
