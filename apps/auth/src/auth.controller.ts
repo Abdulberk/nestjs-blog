@@ -21,11 +21,6 @@ export class AuthController {
   async login(@Request() req, @Res({ passthrough: true }) res: Response) {
     const LoginUserDto: LoginUserDto = req.user;
     await this.authService.login(LoginUserDto, res);
-    return res.send({
-      message: 'Login successful',
-      user: LoginUserDto,
-      success: true,
-    });
   }
 
   @Post('register')

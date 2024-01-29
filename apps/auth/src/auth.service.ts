@@ -34,23 +34,44 @@ export class AuthService {
   }
 
   async login(user: LoginUserDto, response: Response): Promise<any> {
-    const payload = { email: user.email, sub: user._id };
-    const expiresIn = await this.configService.get('JWT_EXPIRATION');
-    const accessToken = this.jwtService.sign(payload);
-    response.cookie('Authentication', accessToken, {
-      httpOnly: true,
-      expires: new Date(Date.now() + expiresIn * 1000),
-    });
+    try {
+      const payload = { email: user.email, sub: user._id };
+      const expiresIn = await this.configService.get('JWT_EXPIRATION');
+      const accessToken = this.jwtService.sign(payload);
+
+      response.cookie('Authentication', accessToken, {
+        httpOnly: true,
+        expires: new Date(Date.now() + expiresIn * 1000),
+      });
+
+      return response.json({
+        message: 'Login successful',
+        user,
+        success: true,
+      });
+    } catch (error) {
+      throw new Error(error.message || 'Login failed !');
+    }
   }
 
   async register(createUserDto: CreateUserDto): Promise<any> {
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    try {
+      const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
-    const user = await this.usersService.createUser({
-      ...createUserDto,
-      password: hashedPassword,
-    });
+      const user = await this.usersService.createUser({
+        ...createUserDto,
+        password: hashedPassword,
+      });
 
-    return user;
+      if (user) {
+        return {
+          message: 'Registration successful !',
+          user,
+          success: true,
+        };
+      }
+    } catch (error) {
+      throw new Error(error.message || 'User registration failed !');
+    }
   }
 }
