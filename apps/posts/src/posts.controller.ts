@@ -6,18 +6,25 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { User } from 'apps/users/src/models/user.schema';
+import { JwtAuthGuard } from 'apps/auth/src/guards/jwt-auth.guard';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @Post()
-  createPost(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto, user._id);
+  @UseGuards(JwtAuthGuard)
+  @Post('/create-post')
+  async createPost(@Body() createPostDto: CreatePostDto, @Req() req) {
+    const userId: User['_id'] = req?.user?.id;
+    console.log('userId in: ' + userId);
+    return await this.postsService.create(createPostDto, userId);
   }
 
   @Get()

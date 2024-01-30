@@ -1,10 +1,8 @@
 import { AbstractDocument } from '@app/common';
 import { Schema, SchemaFactory, Prop } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-@Schema({ versionKey: false })
+@Schema({ versionKey: false, timestamps: true })
 export class User extends AbstractDocument {
-  @Prop()
-  timestamp: Date;
   @Prop({
     type: String,
     required: true,

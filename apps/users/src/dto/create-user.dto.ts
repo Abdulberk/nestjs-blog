@@ -1,20 +1,13 @@
 import {
   IsString,
   IsNotEmpty,
-  IsDate,
   MinLength,
   IsEmail,
   IsOptional,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import mongoose from 'mongoose';
 
 export class CreateUserDto {
-  @IsOptional()
-  @IsDate()
-  @Type(() => Date)
-  timestamp: Date;
-
   @IsEmail()
   @IsNotEmpty()
   @MinLength(8)

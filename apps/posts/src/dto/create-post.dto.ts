@@ -1,23 +1,20 @@
-import { IsString, IsNotEmpty, IsDate, Min, IsArray } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsString, IsNotEmpty, MinLength, IsOptional } from 'class-validator';
 
 import mongoose from 'mongoose';
 
 export class CreatePostDto {
-  @IsDate()
-  @Type(() => Date)
-  timestamp: Date;
   @IsString()
   @IsNotEmpty()
-  @Min(8)
+  @MinLength(8)
   title: string;
   @IsString()
   @IsNotEmpty()
-  @Min(20)
+  @MinLength(20)
   content: string;
-  @IsString()
+
+  @IsOptional()
   user: mongoose.Types.ObjectId;
-  @IsString()
-  @IsArray()
+
+  @IsOptional()
   comments: mongoose.Types.ObjectId[];
 }

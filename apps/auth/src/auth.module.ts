@@ -10,6 +10,7 @@ import { UsersService } from 'apps/users/src/users.service';
 import { UsersRepository } from 'apps/users/src/users.repository';
 import { LocalStrategy } from './strategies/local.strategy';
 import { User, UserSchema } from 'apps/users/src/models/user.schema';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -26,7 +27,13 @@ import { User, UserSchema } from 'apps/users/src/models/user.schema';
     ConfigModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, UsersService, UsersRepository, LocalStrategy],
+  providers: [
+    AuthService,
+    UsersService,
+    UsersRepository,
+    LocalStrategy,
+    JwtStrategy,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

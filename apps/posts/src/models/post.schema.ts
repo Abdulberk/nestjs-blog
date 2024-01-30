@@ -2,10 +2,8 @@ import { AbstractDocument } from '@app/common';
 import { Schema, SchemaFactory, Prop } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 
-@Schema({ versionKey: false })
+@Schema({ versionKey: false, timestamps: true })
 export class Post extends AbstractDocument {
-  @Prop()
-  timestamp: Date;
   @Prop({
     type: String,
     required: true,
@@ -23,9 +21,11 @@ export class Post extends AbstractDocument {
     ref: 'User',
   })
   user: mongoose.Types.ObjectId;
+
   @Prop({
-    type: mongoose.Schema.Types.ObjectId,
+    type: [mongoose.Schema.Types.ObjectId],
     ref: 'Comment',
+    default: [],
   })
   comments: mongoose.Types.ObjectId[];
 }

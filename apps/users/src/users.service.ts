@@ -5,6 +5,7 @@ import * as bcrypt from 'bcryptjs';
 import { UnauthorizedException } from '@nestjs/common';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { User } from './models/user.schema';
+import { Post } from 'apps/posts/src/models/post.schema';
 
 @Injectable()
 export class UsersService {
@@ -13,7 +14,6 @@ export class UsersService {
     await this.validateCreateUser(createUserDto);
     return this.usersRepository.create({
       ...createUserDto,
-      timestamp: new Date(),
     });
   }
 
@@ -25,6 +25,19 @@ export class UsersService {
     }
 
     throw new UnprocessableEntityException('Email already exists');
+  }
+
+  async updateUserPosts(userId: User['_id'], postId: Post['_id']) {
+    try {
+      await this.usersRepository.findOneAndUpdate(
+        { _id: userId },
+        {
+          $push: { posts: postId },
+        },
+      );
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 
   async getUserById(id: string, user: User): Promise<User> {
