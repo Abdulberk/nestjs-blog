@@ -71,7 +71,14 @@ export class PostsService {
     }
   }
 
-  async update(_id: string, updatePostDto: UpdatePostDto) {
+  async update(_id: string, updatePostDto: UpdatePostDto): Promise<Post>{
+
+    const objectId = Types.ObjectId.isValid(_id);
+
+    if (!objectId) {
+      throw new NotFoundException('Post not found');
+    }
+
     return this.postsRepository.findOneAndUpdate(
       { _id },
       {
@@ -83,17 +90,12 @@ export class PostsService {
   async deletePost(_id: string): Promise<PostDeleted> {
     try {
       const objectId = Types.ObjectId.isValid(_id);
-
-      if (!objectId) {
-        throw new NotFoundException('Post not found');
-      }
-
       const post = await this.postsRepository.findOne({ _id });
 
-      if (!post) {
+      if (!objectId || !post) {
         throw new NotFoundException('Post not found');
       }
-
+      
       await this.postsRepository.delete({ _id });
 
       return {
