@@ -71,33 +71,51 @@ export class PostsService {
     }
   }
 
-  async update(_id: string, updatePostDto: UpdatePostDto): Promise<Post>{
+  async updateOnePost(
+    _id: string,
+    updatePostDto: UpdatePostDto,
+  ): Promise<Post> {
+    try {
+      const objectId = Types.ObjectId.isValid(_id);
+      if (!objectId) {
+        throw new NotFoundException('Post not found');
+      }
+      const post = await this.postsRepository.findOne({ _id });
 
-    const objectId = Types.ObjectId.isValid(_id);
+      if (!post) {
+        throw new NotFoundException('Post not found');
+      }
 
-    if (!objectId) {
-      throw new NotFoundException('Post not found');
+      const updatedPost = await this.postsRepository.findOneAndUpdate(
+        { _id },
+        {
+          $set: updatePostDto,
+        },
+      );
+
+      return updatedPost;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      } else {
+        throw new Error(error.message);
+      }
     }
-
-    return this.postsRepository.findOneAndUpdate(
-      { _id },
-      {
-        $set: updatePostDto,
-      },
-    );
   }
 
   async deletePost(_id: string): Promise<PostDeleted> {
     try {
       const objectId = Types.ObjectId.isValid(_id);
-      const post = await this.postsRepository.findOne({ _id });
-
-      if (!objectId || !post) {
+      if (!objectId) {
         throw new NotFoundException('Post not found');
       }
-      
-      await this.postsRepository.delete({ _id });
+      const post = await this.postsRepository.findOne({ _id });
 
+      if (!post) {
+        throw new NotFoundException('Post not found');
+      }
+      await this.postsRepository.delete({ _id });
+      await this.usersService.deleteUserPost(post.user, _id);
       return {
         id: _id,
         message: 'Post deleted successfully',

@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { AbstractRepository } from '@app/common';
 import { Post } from './models/post.schema';
 import { InjectModel } from '@nestjs/mongoose';

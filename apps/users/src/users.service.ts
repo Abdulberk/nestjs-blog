@@ -48,6 +48,19 @@ export class UsersService {
     return await this.usersRepository.findOne({ _id: id });
   }
 
+  async deleteUserPost(userId: User['_id'], postId: string) {
+    try {
+      await this.usersRepository.findOneAndUpdate(
+        { _id: userId },
+        {
+          $pull: { posts: postId },
+        },
+      );
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
   async getUsers(): Promise<User[]> {
     return this.usersRepository.find({});
   }
