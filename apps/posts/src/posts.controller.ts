@@ -17,7 +17,7 @@ import { User } from 'apps/users/src/models/user.schema';
 import { JwtAuthGuard } from 'apps/auth/src/guards/jwt-auth.guard';
 import { PostIdValidationGuard } from './guards/post-id-validation.guard';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PostIdValidationGuard)
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
@@ -41,14 +41,12 @@ export class PostsController {
     return await this.postsService.findAll(userId, page, limit);
   }
 
-  @UseGuards(PostIdValidationGuard)
   @Get(':id')
   getOnePost(@Param('id') id: string, @Req() req) {
     const userId: User['_id'] = req?.user?.id;
     return this.postsService.findOne(id, userId);
   }
 
-  @UseGuards(PostIdValidationGuard)
   @Patch(':id')
   async updateOnePost(
     @Param('id') id: string,
@@ -57,7 +55,6 @@ export class PostsController {
     return await this.postsService.updateOnePost(id, updatePostDto);
   }
 
-  @UseGuards(PostIdValidationGuard)
   @Delete(':id')
   async deletePost(@Param('id') id: string) {
     return await this.postsService.deletePost(id);

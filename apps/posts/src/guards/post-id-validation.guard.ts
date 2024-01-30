@@ -15,6 +15,10 @@ export class PostIdValidationGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const id = request.params.id;
 
+    if (!id) {
+      return true;
+    }
+
     if (!Types.ObjectId.isValid(id)) {
       throw new BadRequestException('Post id is not valid!');
     }
