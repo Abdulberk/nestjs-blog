@@ -17,7 +17,7 @@ import { User } from 'apps/users/src/models/user.schema';
 import { JwtAuthGuard } from 'apps/auth/src/guards/jwt-auth.guard';
 import { PostIdValidationGuard } from './guards/post-id-validation.guard';
 
-@UseGuards(JwtAuthGuard, PostIdValidationGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
@@ -30,7 +30,7 @@ export class PostsController {
   }
 
   @Get('/my-posts')
-  getAllPosts(
+  async getAllPosts(
     @Req() req,
     @Query('page') page: number,
     @Query('limit') limit: number,
@@ -38,23 +38,28 @@ export class PostsController {
     const userId: User['_id'] = req?.user?.id;
     page = page || 1;
     limit = limit || 10;
-    return this.postsService.findAll(userId, page, limit);
+    return await this.postsService.findAll(userId, page, limit);
   }
 
+  @UseGuards(PostIdValidationGuard)
   @Get(':id')
   getOnePost(@Param('id') id: string, @Req() req) {
     const userId: User['_id'] = req?.user?.id;
     return this.postsService.findOne(id, userId);
   }
 
+  @UseGuards(PostIdValidationGuard)
   @Patch(':id')
-  updateOnePost(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postsService.updateOnePost(id, updatePostDto);
+  async updateOnePost(
+    @Param('id') id: string,
+    @Body() updatePostDto: UpdatePostDto,
+  ) {
+    return await this.postsService.updateOnePost(id, updatePostDto);
   }
 
-
+  @UseGuards(PostIdValidationGuard)
   @Delete(':id')
-  deletePost(@Param('id') id: string) {
-    return this.postsService.deletePost(id);
+  async deletePost(@Param('id') id: string) {
+    return await this.postsService.deletePost(id);
   }
 }
