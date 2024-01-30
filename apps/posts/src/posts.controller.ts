@@ -15,8 +15,9 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { User } from 'apps/users/src/models/user.schema';
 import { JwtAuthGuard } from 'apps/auth/src/guards/jwt-auth.guard';
+import { PostIdValidationGuard } from './guards/post-id-validation.guard';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PostIdValidationGuard)
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
@@ -50,6 +51,7 @@ export class PostsController {
   updateOnePost(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postsService.updateOnePost(id, updatePostDto);
   }
+
 
   @Delete(':id')
   deletePost(@Param('id') id: string) {

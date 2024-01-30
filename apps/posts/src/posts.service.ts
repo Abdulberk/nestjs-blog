@@ -7,7 +7,6 @@ import { UsersService } from 'apps/users/src/users.service';
 import { Post } from './models/post.schema';
 import { UnauthorizedException } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
-import { Types } from 'mongoose';
 import PostDeleted from './interface/delete-post.interface';
 @Injectable()
 export class PostsService {
@@ -76,10 +75,6 @@ export class PostsService {
     updatePostDto: UpdatePostDto,
   ): Promise<Post> {
     try {
-      const objectId = Types.ObjectId.isValid(_id);
-      if (!objectId) {
-        throw new NotFoundException('Post not found');
-      }
       const post = await this.postsRepository.findOne({ _id });
 
       if (!post) {
@@ -105,10 +100,6 @@ export class PostsService {
 
   async deletePost(_id: string): Promise<PostDeleted> {
     try {
-      const objectId = Types.ObjectId.isValid(_id);
-      if (!objectId) {
-        throw new NotFoundException('Post not found');
-      }
       const post = await this.postsRepository.findOne({ _id });
 
       if (!post) {
