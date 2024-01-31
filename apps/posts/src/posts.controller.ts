@@ -13,37 +13,33 @@ import {
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { User } from 'apps/users/src/models/user.schema';
 import { JwtAuthGuard } from 'apps/auth/src/guards/jwt-auth.guard';
-import { PostIdValidationGuard } from './guards/post-id-validation.guard';
+import { IdValidationGuard } from './guards/id-validation.guard';
+import mongoose from 'mongoose';
+import { QueryOptionsDto } from './dto/query-options.dto';
 
-@UseGuards(JwtAuthGuard, PostIdValidationGuard)
+@UseGuards(JwtAuthGuard, IdValidationGuard)
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post('/create-post')
   async createPost(@Body() createPostDto: CreatePostDto, @Req() req) {
-    const userId: User['_id'] = req?.user?.id;
+    const userId: mongoose.Types.ObjectId = req?.user?.id;
     console.log('userId in: ' + userId);
     return await this.postsService.create(createPostDto, userId);
   }
 
   @Get('/my-posts')
-  async getAllPosts(
-    @Req() req,
-    @Query('page') page: number,
-    @Query('limit') limit: number,
-  ) {
-    const userId: User['_id'] = req?.user?.id;
-    page = page || 1;
-    limit = limit || 10;
-    return await this.postsService.findAll(userId, page, limit);
+  async getAllPosts(@Req() req, @Query() queryOptionsDto: QueryOptionsDto) {
+    const userId: mongoose.Types.ObjectId = req?.user?.id;
+
+    return await this.postsService.findAll(userId, queryOptionsDto);
   }
 
   @Get(':id')
   getOnePost(@Param('id') id: string, @Req() req) {
-    const userId: User['_id'] = req?.user?.id;
+    const userId: mongoose.Types.ObjectId = req?.user?.id;
     return this.postsService.findOne(id, userId);
   }
 

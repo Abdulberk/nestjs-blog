@@ -7,7 +7,9 @@ import { UsersService } from 'apps/users/src/users.service';
 import { Post } from './models/post.schema';
 import { UnauthorizedException } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
+import { Types } from 'mongoose';
 import PostDeleted from './interface/delete-post.interface';
+import { QueryOptionsDto } from './dto/query-options.dto';
 @Injectable()
 export class PostsService {
   constructor(
@@ -30,14 +32,13 @@ export class PostsService {
 
   async findAll(
     userId: User['_id'],
-    page: number,
-    limit: number,
+    queryOptionsDto: QueryOptionsDto,
   ): Promise<Post[]> {
     try {
       const posts = await this.postsRepository.getAllPostsPagination(
         userId,
-        page,
-        limit,
+        queryOptionsDto.page,
+        queryOptionsDto.limit,
       );
 
       if (!posts || posts.length === 0) {
@@ -105,7 +106,7 @@ export class PostsService {
       if (!post) {
         throw new NotFoundException('Post not found');
       }
-      await this.postsRepository.delete({ _id });
+      await this.postsRepository.delete({ _id: post.user });
       await this.usersService.deleteUserPost(post.user, _id);
       return {
         id: _id,

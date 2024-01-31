@@ -1,18 +1,12 @@
 import { AbstractDocument } from '@app/common';
 import { Schema, SchemaFactory, Prop } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { Post } from 'apps/posts/src/models/post.schema';
-import { User } from 'apps/users/src/models/user.schema';
-
-@Schema({ versionKey: false })
+@Schema({ versionKey: false, timestamps: true })
 export class Comment extends AbstractDocument {
-  @Prop()
-  timestamp: Date;
-
   @Prop({
     type: String,
     required: true,
-    min: 8,
+    min: 5,
   })
   comment: string;
 
@@ -20,13 +14,13 @@ export class Comment extends AbstractDocument {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Post',
   })
-  commentOf: Post;
+  commentOf: mongoose.Types.ObjectId;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   })
-  commentor: User;
+  commentor: mongoose.Types.ObjectId;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);
