@@ -25,7 +25,7 @@ export class PostsController {
 
   @Post('/create-post')
   async createPost(@Body() createPostDto: CreatePostDto, @Req() req) {
-    const userId: Types.ObjectId = req?.user?.id;
+    const userId = req?.user?.id;
     console.log('userId in: ' + userId);
     return await this.postsService.create(createPostDto, userId);
   }

@@ -27,14 +27,17 @@ export class UsersService {
     throw new UnprocessableEntityException('Email already exists');
   }
 
-  async updateUserPosts(userId: User['_id'], postId: Post['_id']) {
+  async updateUserPosts(userId: string, postId: string): Promise<boolean> {
+    const filterQuery = {
+      _id: userId,
+    };
+
     try {
-      await this.usersRepository.findOneAndUpdate(
-        { _id: userId },
-        {
-          $push: { posts: postId },
-        },
-      );
+      await this.usersRepository.updateOne(filterQuery, {
+        $push: { posts: postId },
+      });
+
+      return true;
     } catch (error) {
       throw new Error(error.message);
     }

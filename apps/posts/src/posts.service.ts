@@ -18,14 +18,23 @@ export class PostsService {
     private readonly postsRepository: PostsRepository,
     private readonly usersService: UsersService,
   ) {}
-  async create(createPostDto: CreatePostDto, userId: User['_id']) {
+  async create(createPostDto: CreatePostDto, userId: string) {
     try {
       const createdPost = await this.postsRepository.create({
         ...createPostDto,
-        user: userId,
+        user: new Types.ObjectId(userId),
       });
 
-      await this.usersService.updateUserPosts(userId, createdPost._id);
+      const createdPostId = createdPost._id.toString();
+      const fieldsUpdated = await this.usersService.updateUserPosts(
+        userId,
+        createdPostId,
+      );
+
+      if (!fieldsUpdated) {
+        throw new BadRequestException('Post creation failed !');
+      }
+
       return createdPost;
     } catch (error) {
       throw new Error(error.message);

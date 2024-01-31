@@ -6,6 +6,7 @@ import { Model } from 'mongoose';
 import { Types } from 'mongoose';
 import { UpdateWriteOpResult } from 'mongoose';
 import { QueryOptionsDto } from './dto/query-options.dto';
+import { FilterQuery } from 'mongoose';
 
 @Injectable()
 export class PostsRepository extends AbstractRepository<Post> {
@@ -39,6 +40,31 @@ export class PostsRepository extends AbstractRepository<Post> {
 
     return result;
   }
+
+
+  async searchText(searchText: string): Promise<Post[]> {
+
+    const filterQuery: FilterQuery<Post> = {
+      $text: {
+        $search: searchText,
+      },
+    };
+
+    const result = await this.model
+      .find(filterQuery)
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'commentor',
+          model: 'User',
+          select: '-posts -password',
+        },
+      })
+      .exec();
+
+    return result;
+  }
+
 
   async updatePostWithComment(
     postId: Types.ObjectId,
