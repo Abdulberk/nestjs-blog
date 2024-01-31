@@ -37,10 +37,11 @@ export class PostsService {
     queryOptionsDto: QueryOptionsDto,
   ): Promise<Post[]> {
     try {
+      const { page = 1, limit = 10 } = queryOptionsDto;
       const posts = await this.postsRepository.getAllPostsPagination(
         userId,
-        queryOptionsDto.page,
-        queryOptionsDto.limit,
+        page,
+        limit,
       );
 
       if (!posts || posts.length === 0) {
@@ -57,7 +58,7 @@ export class PostsService {
     }
   }
 
-  async findOne(postId: string, userId: User['_id']): Promise<Post> {
+  async findOne(postId: string, userId: string): Promise<Post> {
     try {
       const post = await this.postsRepository.findOne({ _id: postId });
       if (!post) {

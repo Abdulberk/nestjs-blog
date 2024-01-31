@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Types } from 'mongoose';
 import { UpdateWriteOpResult } from 'mongoose';
+import { QueryOptionsDto } from './dto/query-options.dto';
 
 @Injectable()
 export class PostsRepository extends AbstractRepository<Post> {
@@ -26,6 +27,14 @@ export class PostsRepository extends AbstractRepository<Post> {
       .sort({ _id: -1 })
       .skip(skip)
       .limit(limit)
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'commentor',
+          model: 'User',
+          select: '-posts -password',
+        },
+      })
       .exec();
 
     return result;

@@ -33,13 +33,12 @@ export class PostsController {
   @Get('/my-posts')
   async getAllPosts(@Req() req, @Query() queryOptionsDto: QueryOptionsDto) {
     const userId: Types.ObjectId = req?.user?.id;
-
     return await this.postsService.findAll(userId, queryOptionsDto);
   }
 
   @Get(':id')
   async getOnePost(@Param('id') id: string, @Req() req) {
-    const userId: Types.ObjectId = req?.user?.id;
+    const userId = req?.user?.id;
     return await this.postsService.findOne(id, userId);
   }
 

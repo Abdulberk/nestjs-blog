@@ -1,13 +1,14 @@
-import { IsOptional, IsNumber, Min } from 'class-validator';
+import { IsOptional, IsNumber, Min, IsInt } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class QueryOptionsDto {
   @IsOptional()
-  @IsNumber()
-  @Min(1)
+  @IsInt()
+  @Type(() => Number)
   page?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(1)
+  @IsInt()
+  @Type(() => Number)
   limit?: number;
 }
