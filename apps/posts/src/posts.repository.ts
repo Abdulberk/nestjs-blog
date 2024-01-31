@@ -3,6 +3,8 @@ import { AbstractRepository } from '@app/common';
 import { Post } from './models/post.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Types } from 'mongoose';
+import { UpdateWriteOpResult } from 'mongoose';
 
 @Injectable()
 export class PostsRepository extends AbstractRepository<Post> {
@@ -27,5 +29,17 @@ export class PostsRepository extends AbstractRepository<Post> {
       .exec();
 
     return result;
+  }
+
+  async updatePostWithComment(
+    postId: Types.ObjectId,
+    commentId: Types.ObjectId,
+  ): Promise<boolean> {
+    const result: UpdateWriteOpResult = await this.model.updateOne(
+      { _id: postId },
+      { $push: { comments: commentId } },
+    );
+
+    return result.modifiedCount > 0;
   }
 }

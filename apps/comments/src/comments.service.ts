@@ -5,10 +5,14 @@ import { CommentsRepository } from './comments.repository';
 import { AddCommentDto } from './dto/add-comment.dto';
 import { Comment } from './models/comment.schema';
 import { User } from 'apps/users/src/models/user.schema';
+import { PostsService } from 'apps/posts/src/posts.service';
 
 @Injectable()
 export class CommentsService {
-  constructor(private readonly commentsRepository: CommentsRepository) {}
+  constructor(
+    private readonly commentsRepository: CommentsRepository,
+    private readonly postsService: PostsService,
+  ) {}
 
   async addComment(
     postId: Comment['_id'],
@@ -26,6 +30,12 @@ export class CommentsService {
         throw new NotFoundException('Comment could not be added !');
       }
 
+      const postUpdateWithCommnet =
+        await this.postsService.updatePostWithComment(postId, comment._id);
+
+      if (!postUpdateWithCommnet) {
+        throw new Error('Post could not be updated with comment !');
+      }
       return comment;
     } catch (error) {
       if (error instanceof NotFoundException) {

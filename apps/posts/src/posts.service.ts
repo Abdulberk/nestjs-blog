@@ -71,6 +71,21 @@ export class PostsService {
     }
   }
 
+  async updatePostWithComment(
+    postId: Types.ObjectId,
+    commentId: Types.ObjectId,
+  ): Promise<boolean> {
+    const updatedPost = await this.postsRepository.updatePostWithComment(
+      postId,
+      commentId,
+    );
+    if (!updatedPost) {
+      throw new NotFoundException('Post could not be updated !');
+    }
+
+    return updatedPost;
+  }
+
   async updateOnePost(
     _id: string,
     updatePostDto: UpdatePostDto,
