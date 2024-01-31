@@ -12,7 +12,8 @@ import { FilterQuery } from 'mongoose';
 export class PostsRepository extends AbstractRepository<Post> {
   protected readonly logger = new Logger(PostsRepository.name);
 
-  constructor(@InjectModel(Post.name) postModel: Model<Post>) {
+  constructor(@InjectModel(Post.name) private postModel: Model<Post>
+  ) {
     super(postModel);
   }
 
@@ -41,30 +42,35 @@ export class PostsRepository extends AbstractRepository<Post> {
     return result;
   }
 
-
   async searchText(searchText: string): Promise<Post[]> {
-
-    const filterQuery: FilterQuery<Post> = {
-      $text: {
-        $search: searchText,
-      },
-    };
-
-    const result = await this.model
-      .find(filterQuery)
-      .populate({
-        path: 'comments',
-        populate: {
-          path: 'commentor',
-          model: 'User',
-          select: '-posts -password',
+    const result = await this.postModel.aggregate([
+      {
+        $search: {
+          index: 'searchIndex',
+          text: {
+            query: searchText,
+            path: ['title', 'content'],
+          },
         },
-      })
-      .exec();
+      },
+      {
+        $project: {
+          title: 1,
+          content: 1,
+          user: 1,
+          score: { $meta: 'searchScore' },
+        },
+      },
+      {
+        $sort: {
+          score: -1,
+
+        },
+      },
+    ]);
 
     return result;
   }
-
 
   async updatePostWithComment(
     postId: Types.ObjectId,

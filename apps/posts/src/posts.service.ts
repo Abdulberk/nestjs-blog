@@ -41,6 +41,24 @@ export class PostsService {
     }
   }
 
+  async searchText(searchQuery: string): Promise<Post[]> {
+    try {
+      const posts = await this.postsRepository.searchText(searchQuery);
+
+      if (!posts || posts.length === 0) {
+        throw new NotFoundException(`No posts found for ${searchQuery}`);
+      }
+
+      return posts;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      } 
+        throw new Error(error.message);
+    }
+  }
+
+
   async findAll(
     userId: User['_id'],
     queryOptionsDto: QueryOptionsDto,
@@ -61,9 +79,8 @@ export class PostsService {
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
-      } else {
-        throw new Error(error.message);
       }
+        throw new Error(error.message);
     }
   }
 
@@ -120,9 +137,8 @@ export class PostsService {
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
-      } else {
+      } 
         throw new Error(error.message);
-      }
     }
   }
 
@@ -153,9 +169,8 @@ export class PostsService {
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
-      } else {
+      } 
         throw new Error(error.message);
-      }
     }
   }
 }
