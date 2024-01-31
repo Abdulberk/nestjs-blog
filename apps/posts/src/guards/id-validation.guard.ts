@@ -14,13 +14,7 @@ export class IdValidationGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
-    const idTypes: IdType[] = [
-      IdType.COMMENT_ID,
-      IdType.POST_ID,
-      IdType.USER_ID,
-      IdType.ID,
-    ];
-
+    const idTypes: IdType[] = Object.values(IdType);
     for (const idType of idTypes) {
       const id = request.params[idType];
 
