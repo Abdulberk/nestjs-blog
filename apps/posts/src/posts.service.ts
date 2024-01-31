@@ -10,6 +10,7 @@ import { NotFoundException } from '@nestjs/common';
 import { Types } from 'mongoose';
 import PostDeleted from './interface/delete-post.interface';
 import { QueryOptionsDto } from './dto/query-options.dto';
+import { BadRequestException } from '@nestjs/common';
 @Injectable()
 export class PostsService {
   constructor(
@@ -80,7 +81,7 @@ export class PostsService {
       commentId,
     );
     if (!updatedPost) {
-      throw new NotFoundException('Post could not be updated !');
+      throw new BadRequestException('Post update with comment failed !');
     }
 
     return updatedPost;
@@ -121,8 +122,16 @@ export class PostsService {
       if (!post) {
         throw new NotFoundException('Post not found');
       }
-      await this.postsRepository.delete({ _id: post.user });
-      await this.usersService.deleteUserPost(post.user, _id);
+      const postDeleted = await this.postsRepository.delete({ _id: post.user });
+      const postFieldRemovedFromUser = await this.usersService.deleteUserPost(
+        post.user,
+        _id,
+      );
+
+      if (!postDeleted || !postFieldRemovedFromUser) {
+        throw new BadRequestException('Post delete failed !');
+      }
+
       return {
         id: _id,
         message: 'Post deleted successfully',

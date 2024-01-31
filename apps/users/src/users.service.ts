@@ -48,14 +48,20 @@ export class UsersService {
     return await this.usersRepository.findOne({ _id: id });
   }
 
-  async deleteUserPost(userId: User['_id'], postId: string) {
+  async deleteUserPost(userId: User['_id'], postId: string): Promise<boolean> {
     try {
-      await this.usersRepository.findOneAndUpdate(
+      const postRemovedFromUser = await this.usersRepository.findOneAndUpdate(
         { _id: userId },
         {
           $pull: { posts: postId },
         },
       );
+
+      if (!postRemovedFromUser) {
+        throw new Error('Post could not be removed from user');
+      }
+
+      return true;
     } catch (error) {
       throw new Error(error.message);
     }

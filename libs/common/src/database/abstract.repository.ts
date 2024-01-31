@@ -64,6 +64,23 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     return document;
   }
 
+  async findByIdAndUpdateOne(
+    filterQuery: FilterQuery<TDocument>,
+    update: UpdateQuery<TDocument>,
+  ): Promise<TDocument> {
+
+    const document = await this.model.findByIdAndUpdate(filterQuery, update, {
+      new: true,
+    });
+
+    if (!document) {
+      this.logger.warn('Document was not found in the database', filterQuery);
+      throw new NotFoundException('Document was not found !');
+    }
+
+    return document;
+  }
+
   async find(filterQuery: FilterQuery<TDocument>): Promise<TDocument[]> {
     const documents = await this.model
       .find(filterQuery)
@@ -72,7 +89,7 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     return documents;
   }
 
-  async delete(filterQuery: FilterQuery<TDocument>): Promise<void> {
+  async delete(filterQuery: FilterQuery<TDocument>): Promise<boolean> {
     const deletionResult = await this.model.deleteOne(filterQuery);
 
     if (deletionResult.deletedCount === 0) {
@@ -81,6 +98,8 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
         'Document was not found and could not be deleted !',
       );
     }
+
+    return true;
   }
 
   async findOneAndDelete(

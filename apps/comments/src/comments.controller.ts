@@ -14,6 +14,7 @@ import { CommentsService } from './comments.service';
 import { JwtAuthGuard } from 'apps/auth/src/guards/jwt-auth.guard';
 import { IdValidationGuard } from 'apps/posts/src/guards/id-validation.guard';
 import { AddCommentDto } from './dto/add-comment.dto';
+import { UpdateCommentDto } from './dto/update-comment.dto';
 import mongoose from 'mongoose';
 
 @UseGuards(JwtAuthGuard, IdValidationGuard)
@@ -30,5 +31,16 @@ export class CommentsController {
     const userId: mongoose.Types.ObjectId = req?.user?.id;
 
     return await this.commentsService.addComment(postId, userId, addCommentDto);
+  }
+
+  @Patch('/update-comment/:commentId')
+  async updateComment(
+    @Param('commentId') commentId: mongoose.Types.ObjectId,
+    @Body() updateCommentDto: UpdateCommentDto,
+  ) {
+    return await this.commentsService.updateComment(
+      commentId,
+      updateCommentDto,
+    );
   }
 }

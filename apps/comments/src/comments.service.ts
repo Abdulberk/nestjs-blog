@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { UnauthorizedException } from '@nestjs/common';
+import { UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 import { CommentsRepository } from './comments.repository';
 import { AddCommentDto } from './dto/add-comment.dto';
 import { Comment } from './models/comment.schema';
 import { User } from 'apps/users/src/models/user.schema';
 import { PostsService } from 'apps/posts/src/posts.service';
+import { UpdateCommentDto } from './dto/update-comment.dto';
 
 @Injectable()
 export class CommentsService {
@@ -27,22 +28,48 @@ export class CommentsService {
       });
 
       if (!comment) {
-        throw new NotFoundException('Comment could not be added !');
+        throw new BadRequestException('Comment could not be created !');
       }
 
       const postUpdateWithCommnet =
         await this.postsService.updatePostWithComment(postId, comment._id);
 
       if (!postUpdateWithCommnet) {
-        throw new Error('Post could not be updated with comment !');
+        throw new BadRequestException('Post update with comment failed !');
       }
       return comment;
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException(error.message);
+      if (error instanceof BadRequestException) {
+        throw new BadRequestException(error.message);
       } else {
         throw new Error(error.message);
       }
     }
   }
+
+
+  async updateComment(
+    commentId: Comment['_id'],
+    updateCommentDto: UpdateCommentDto,
+  ): Promise<Comment> {
+    try {
+      const commentUpdated = await this.commentsRepository.findByIdAndUpdateOne(
+        { _id: commentId },
+        updateCommentDto,
+      );
+
+      if (!commentUpdated) {
+        throw new BadRequestException('Comment could not be updated !');
+      }
+
+      return commentUpdated;
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw new BadRequestException(error.message);
+      } else {
+        throw new Error(error.message);
+      }
+    }
+  }
+
 }
