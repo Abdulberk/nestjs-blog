@@ -11,6 +11,7 @@ import { Types } from 'mongoose';
 import PostDeleted from './interface/delete-post.guard';
 import { QueryOptionsDto } from './dto/query-options.dto';
 import { BadRequestException } from '@nestjs/common';
+import { FilterQuery } from 'mongoose';
 @Injectable()
 export class PostsService {
   constructor(
@@ -60,10 +61,10 @@ export class PostsService {
     try {
       const post = await this.postsRepository.findOne({ _id: postId });
       if (!post) {
-        throw new NotFoundException('Post not found');
+        throw new NotFoundException('Post not found !');
       }
       if (post.user.toString() !== userId.toString()) {
-        throw new UnauthorizedException('Unauthorized access');
+        throw new UnauthorizedException('Unauthorized access !');
       }
 
       return post;
@@ -95,7 +96,7 @@ export class PostsService {
       const post = await this.postsRepository.findOne({ _id });
 
       if (!post) {
-        throw new NotFoundException('Post not found');
+        throw new NotFoundException('Post not found !');
       }
 
       const updatedPost = await this.postsRepository.findOneAndUpdate(
@@ -115,26 +116,28 @@ export class PostsService {
     }
   }
 
-  async deletePost(_id: string): Promise<PostDeleted> {
+  async deletePost(id: string, userId: string): Promise<PostDeleted> {
     try {
-      const post = await this.postsRepository.findOne({ _id });
+      const filterQuery: FilterQuery<Post> = {
+        _id: new Types.ObjectId(id),
+        user: new Types.ObjectId(userId),
+      };
 
-      if (!post) {
-        throw new NotFoundException('Post not found');
+      const existingPost = await this.postsRepository.findOne(filterQuery);
+
+      if (!existingPost) {
+        throw new NotFoundException('Post not found !');
       }
-      const postDeleted = await this.postsRepository.delete({ _id: post.user });
-      const postFieldRemovedFromUser = await this.usersService.deleteUserPost(
-        post.user,
-        _id,
-      );
 
-      if (!postDeleted || !postFieldRemovedFromUser) {
+      const deletedPost = await this.postsRepository.delete(filterQuery);
+
+      if (!deletedPost) {
         throw new BadRequestException('Post delete failed !');
       }
 
       return {
-        id: _id,
-        message: 'Post deleted successfully',
+        id,
+        message: 'Post deleted successfully !',
         success: true,
       };
     } catch (error) {

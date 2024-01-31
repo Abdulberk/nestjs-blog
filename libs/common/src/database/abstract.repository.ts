@@ -96,7 +96,7 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     if (deletionResult.deletedCount === 0) {
       this.logger.warn('Document was not found in the database', filterQuery);
       throw new NotFoundException(
-        'Document was not found and could not be deleted !',
+        'Document was not found ! You are either not the owner of the document or the document does not exist !',
       );
     }
 

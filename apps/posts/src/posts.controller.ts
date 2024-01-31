@@ -15,7 +15,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { JwtAuthGuard } from 'apps/auth/src/guards/jwt-auth.guard';
 import { IdValidationGuard } from './guards/id-validation.guard';
-import mongoose from 'mongoose';
+import { Types } from 'mongoose';
 import { QueryOptionsDto } from './dto/query-options.dto';
 
 @UseGuards(JwtAuthGuard, IdValidationGuard)
@@ -25,22 +25,22 @@ export class PostsController {
 
   @Post('/create-post')
   async createPost(@Body() createPostDto: CreatePostDto, @Req() req) {
-    const userId: mongoose.Types.ObjectId = req?.user?.id;
+    const userId: Types.ObjectId = req?.user?.id;
     console.log('userId in: ' + userId);
     return await this.postsService.create(createPostDto, userId);
   }
 
   @Get('/my-posts')
   async getAllPosts(@Req() req, @Query() queryOptionsDto: QueryOptionsDto) {
-    const userId: mongoose.Types.ObjectId = req?.user?.id;
+    const userId: Types.ObjectId = req?.user?.id;
 
     return await this.postsService.findAll(userId, queryOptionsDto);
   }
 
   @Get(':id')
-  getOnePost(@Param('id') id: string, @Req() req) {
-    const userId: mongoose.Types.ObjectId = req?.user?.id;
-    return this.postsService.findOne(id, userId);
+  async getOnePost(@Param('id') id: string, @Req() req) {
+    const userId: Types.ObjectId = req?.user?.id;
+    return await this.postsService.findOne(id, userId);
   }
 
   @Patch(':id')
@@ -52,7 +52,8 @@ export class PostsController {
   }
 
   @Delete(':id')
-  async deletePost(@Param('id') id: string) {
-    return await this.postsService.deletePost(id);
+  async deletePost(@Param('id') id: string, @Req() req) {
+    const userId = req?.user?.id;
+    return await this.postsService.deletePost(id, userId);
   }
 }
