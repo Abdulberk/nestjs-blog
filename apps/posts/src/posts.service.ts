@@ -8,7 +8,7 @@ import { Post } from './models/post.schema';
 import { UnauthorizedException } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 import { Types } from 'mongoose';
-import PostDeleted from './interface/delete-post.interface';
+import PostDeleted from './interface/delete-post.guard';
 import { QueryOptionsDto } from './dto/query-options.dto';
 import { BadRequestException } from '@nestjs/common';
 @Injectable()

@@ -1,13 +1,10 @@
 import {
   Controller,
-  Get,
   Post,
-  Delete,
   Patch,
   Req,
   UseGuards,
   Param,
-  Query,
   Body,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
@@ -15,7 +12,7 @@ import { JwtAuthGuard } from 'apps/auth/src/guards/jwt-auth.guard';
 import { IdValidationGuard } from 'apps/posts/src/guards/id-validation.guard';
 import { AddCommentDto } from './dto/add-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import mongoose from 'mongoose';
+import { Types } from 'mongoose';
 
 @UseGuards(JwtAuthGuard, IdValidationGuard)
 @Controller('comments')
@@ -25,20 +22,23 @@ export class CommentsController {
   @Post('/add-comment/:postId')
   async addComment(
     @Req() req,
-    @Param('postId') postId: mongoose.Types.ObjectId,
+    @Param('postId') postId: Types.ObjectId,
     @Body() addCommentDto: AddCommentDto,
   ) {
-    const userId: mongoose.Types.ObjectId = req?.user?.id;
+    const userId: Types.ObjectId = req?.user?.id;
 
     return await this.commentsService.addComment(postId, userId, addCommentDto);
   }
 
   @Patch('/update-comment/:commentId')
   async updateComment(
-    @Param('commentId') commentId: mongoose.Types.ObjectId,
+    @Req() req,
+    @Param('commentId') commentId: Types.ObjectId,
     @Body() updateCommentDto: UpdateCommentDto,
   ) {
+    const userId: Types.ObjectId = req?.user?.id;
     return await this.commentsService.updateComment(
+      userId,
       commentId,
       updateCommentDto,
     );

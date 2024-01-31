@@ -42,7 +42,9 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
 
     if (!document) {
       this.logger.warn('Document was not found in the database', filterQuery);
-      throw new NotFoundException('Document was not found !');
+      throw new NotFoundException(
+        'Document was not found ! You are either not the owner of the document or the document does not exist !',
+      );
     }
 
     return document;
@@ -68,7 +70,6 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     filterQuery: FilterQuery<TDocument>,
     update: UpdateQuery<TDocument>,
   ): Promise<TDocument> {
-
     const document = await this.model.findByIdAndUpdate(filterQuery, update, {
       new: true,
     });
