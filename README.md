@@ -1,6 +1,5 @@
-# Project Name
-
-A brief description of your project.
+# Nest.js Blog API
+A blog app built using Nest.js
 
 ## Table of Contents
 
