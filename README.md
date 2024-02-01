@@ -1,73 +1,113 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Project Name
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A brief description of your project.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Table of Contents
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- [Installation](#installation)
+- [Endpoints](#endpoints)
+  - [Posts](#posts)
+  - [Comments](#comments)
+  - [Authentication](#authentication)
+  - [Users](#users)
+- [License](#license)
 
 ## Installation
 
-```bash
-$ npm install
-```
+1. **Node.js Installation:** Make sure [Node.js](https://nodejs.org/) is installed. I highly recommend using the LTS version.
 
-## Running the app
+2. **Install Dependencies:** Cloning the repo, in the project root directory, run the following command to install dependencies:
 
-```bash
-# development
-$ npm run start
+    ```bash
+    npm install
+    ```
 
-# watch mode
-$ npm run start:dev
+3. **Database Setup:** If using MongoDB or any other database, update the connection details in `.env` file
 
-# production mode
-$ npm run start:prod
-```
+4. **Environment Variables:** Create a `.env` file and set the required environment variables if you want to switch to your own configs, or you can leave it as is and go on with the default env config which comes out of the box by default just for test purposes. I recommend the second option, switching to that, you wont really need to mess around some MongoDB configs setting up search index config in order to make use of searching feature etc. Now it's just plug-and-play.
 
-## Test
+    ```env
+    JWT_EXPIRATION=86400
+    PORT=3000
+    MONGODB_URI=mongodb+srv://abdulberk:UvyHBAm3NesMfLEA@cluster0.l1datvw.mongodb.net/?retryWrites=true&w=majority
+    JWT_SECRET=c29fdce093d100d98c3cb49f3e95153f6260ecdda8251db4d8d4b8fd5e3a0a35
+    ```
 
-```bash
-# unit tests
-$ npm run test
+5. **Start the Application:** Launch the application with the following commands depending on the environment you wish
 
-# e2e tests
-$ npm run test:e2e
+    ```bash
+    # development
+    npm run start
+    ```
+ 
+	```bash
+	 # watch mode
+	npm  run  start:dev
+	 ```
 
-# test coverage
-$ npm run test:cov
-```
+	  ```bash
+    # production mode
+    npm  run  start:prod
+    ```
 
-## Support
+## Endpoints
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-## Stay in touch
+### Posts
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+1. **Create Post:**
+    - Endpoint: `POST /posts/create-post`
+    - Description: Create a new post for an authenticated user.
 
-## License
+2. **Get My Posts:**
+    - Endpoint: `GET /posts/my-posts`
+    - Description: Retrieve all the posts for authenticated user.
 
-Nest is [MIT licensed](LICENSE).
+3. **Get One Post:**
+    - Endpoint: `GET /posts/post/:id`
+    - Description: Retrieve details of a specific post for an authenticated user.
+
+4. **Update Post:**
+    - Endpoint: `PATCH /posts/update-post/:id`
+    - Description: Update the specified post for an authenticated user.
+
+5. **Delete Post:**
+    - Endpoint: `DELETE /posts/:id`
+    - Description: Delete the specified post for an authenticated user.
+
+6. **Search Posts:**
+    - Endpoint: `GET /posts/search?query=your_search_query`
+    - Description: Search posts with the specified query for an authenticated user.
+
+### Comments
+
+1. **Add Comment:**
+    - Endpoint: `POST /comments/add-comment/:postId`
+    - Description: Add a comment to a specific post.
+
+2. **Update Comment:**
+    - Endpoint: `PATCH /comments/update-comment/:commentId`
+    - Description: Update the specified comment.
+
+### Authentication
+
+1. **Login:**
+    - Endpoint: `POST /auth/login`
+    - Description: Authenticate and obtain a JWT token.
+
+2. **Register:**
+    - Endpoint: `POST /auth/register`
+    - Description: Register a new user, note that you won't have access token after a successful register process, meaning you will also need to login to achieve that.
+
+### Users
+
+#### User and Auth Layer Separation
+
+In my application architecture, the decision to separate the `User` and `Auth` layers stems from the need to establish a modular and maintainable structure. This separation optimizes scalability, code clarity, and security, promoting simplicity and efficient development environment. So, the modular structure encourages code reuse and facilitates independent scaling, contributing to a well-organized and secure codebase.
+
+1. **Get User by ID:**
+    - Endpoint: `GET /users/get-user/:id`
+    - Description: Retrieve user details by ID.
+
+
+

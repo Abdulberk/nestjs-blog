@@ -53,11 +53,10 @@ export class PostsService {
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
-      } 
-        throw new Error(error.message);
+      }
+      throw new Error(error.message);
     }
   }
-
 
   async findAll(
     userId: User['_id'],
@@ -80,7 +79,7 @@ export class PostsService {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
       }
-        throw new Error(error.message);
+      throw new Error(error.message);
     }
   }
 
@@ -137,8 +136,8 @@ export class PostsService {
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
-      } 
-        throw new Error(error.message);
+      }
+      throw new Error(error.message);
     }
   }
 
@@ -169,8 +168,8 @@ export class PostsService {
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
-      } 
-        throw new Error(error.message);
+      }
+      throw new Error(error.message);
     }
   }
 }
