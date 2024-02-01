@@ -1,5 +1,5 @@
 # Nest.js Blog API
-A blog app built using Nest.js
+An advanced backend solution for a blog application built using Nest.js.
 
 ## Table of Contents
 
