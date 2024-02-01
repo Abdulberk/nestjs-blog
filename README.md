@@ -95,6 +95,12 @@ Timestamps `( createdAt, updatedAt )` are generated automatically once posts are
 2. **Update Comment:**
     - Endpoint: `PATCH /comments/update-comment/:commentId`
     - Description: Update the specified comment.
+   - Request Body:
+      ```json
+      {
+        "comment": "Your Comment Text"
+      }
+      ```
 
 ### Authentication
 
