@@ -59,7 +59,13 @@ Timestamps `( createdAt, updatedAt )` are generated automatically once posts are
 1. **Create Post:**
     - Endpoint: `POST /posts/create-post`
     - Description: Create a new post for an authenticated user.
-     - Request Body: ```json { "title": "Your Post Title", "content": "Your Post Content" } ```
+    - Request Body:
+      ```json
+      {
+        "title": "Your Post Title",
+        "content": "Your Post Content"
+      }
+      ```
 
 2. **Get My Posts:**
 	To make use of pagination, just add `limit` and `page` query parameters at the end of the endpoint, if both are not present, the controller will set it as `page=1&limit=10`
@@ -75,7 +81,13 @@ Timestamps `( createdAt, updatedAt )` are generated automatically once posts are
 5. **Update Post:**
     - Endpoint: `PATCH /posts/update-post/:id`
     - Description: Update the specified post for an authenticated user.
-   - Request Body: ```json { "title": "Your Post Title", "content": "Your Post Content" } ```
+   - Request Body:
+      ```json
+      {
+        "title": "Your Post Title",
+        "content": "Your Post Content"
+      }
+      ```
 
 6. **Delete Post:**
     - Endpoint: `DELETE /posts/:id`
