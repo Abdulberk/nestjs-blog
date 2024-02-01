@@ -51,31 +51,37 @@ A brief description of your project.
     ```
 
 ## Endpoints
-
+Timestamps `( createdAt, updatedAt )` are generated automatically once posts are created.
 
 ### Posts
+
 
 1. **Create Post:**
     - Endpoint: `POST /posts/create-post`
     - Description: Create a new post for an authenticated user.
+    - Request Body: ```json { "title": "Your Post Title", "content": "Your Post Content" } ```
+    - Optional Fields: `firstName`, `lastName`
 
 2. **Get My Posts:**
+	To make use of pagination, just add `limit` and `page` query parameters at the end of the endpoint, if both are not present, the controller will set it as `page=1&limit=10`
     - Endpoint: `GET /posts/my-posts`
     - Description: Retrieve all the posts for authenticated user.
+    - Query Params: `page`, `limit`
 
-3. **Get One Post:**
+4. **Get One Post:**
     - Endpoint: `GET /posts/post/:id`
     - Description: Retrieve details of a specific post for an authenticated user.
+    - Request Body: ```json { "title": "Updated Post Title", "content": "Updated Post Content" } ```
 
-4. **Update Post:**
+5. **Update Post:**
     - Endpoint: `PATCH /posts/update-post/:id`
     - Description: Update the specified post for an authenticated user.
 
-5. **Delete Post:**
+6. **Delete Post:**
     - Endpoint: `DELETE /posts/:id`
     - Description: Delete the specified post for an authenticated user.
 
-6. **Search Posts:**
+7. **Search Posts:**
     - Endpoint: `GET /posts/search?query=your_search_query`
     - Description: Search posts with the specified query for an authenticated user.
 
@@ -84,6 +90,7 @@ A brief description of your project.
 1. **Add Comment:**
     - Endpoint: `POST /comments/add-comment/:postId`
     - Description: Add a comment to a specific post.
+    - Request Body:  ```json { "comment": "Your Comment Text" } ```
 
 2. **Update Comment:**
     - Endpoint: `PATCH /comments/update-comment/:commentId`
@@ -93,7 +100,7 @@ A brief description of your project.
 
 1. **Login:**
     - Endpoint: `POST /auth/login`
-    - Description: Authenticate and obtain a JWT token.
+    - Description: Authenticate and obtain a JWT token provided by `Local Strategy`, which is the default one
 
 2. **Register:**
     - Endpoint: `POST /auth/register`
