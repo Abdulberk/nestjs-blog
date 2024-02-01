@@ -10,7 +10,7 @@ A brief description of your project.
   - [Comments](#comments)
   - [Authentication](#authentication)
   - [Users](#users)
-- [License](#license)
+
 
 ## Installation
 
