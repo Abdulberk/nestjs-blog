@@ -60,7 +60,6 @@ Timestamps `( createdAt, updatedAt )` are generated automatically once posts are
     - Endpoint: `POST /posts/create-post`
     - Description: Create a new post for an authenticated user.
     - Request Body: ```json { "title": "Your Post Title", "content": "Your Post Content" } ```
-    - Optional Fields: `firstName`, `lastName`
 
 2. **Get My Posts:**
 	To make use of pagination, just add `limit` and `page` query parameters at the end of the endpoint, if both are not present, the controller will set it as `page=1&limit=10`
@@ -112,10 +111,27 @@ Timestamps `( createdAt, updatedAt )` are generated automatically once posts are
 1. **Login:**
     - Endpoint: `POST /auth/login`
     - Description: Authenticate and obtain a JWT token provided by `Local Strategy`, which is the default one
+ - Request Body:
+      ```json
+      {
+        "email": "user@example.com",
+        "password": "your_password"
+      }
+      ```
 
 2. **Register:**
     - Endpoint: `POST /auth/register`
     - Description: Register a new user, note that you won't have access token after a successful register process, meaning you will also need to login to achieve that.
+   - Request Body:
+      ```json
+      {
+        "email": "user@example.com",
+        "password": "your_password",
+        "firstName": "John",
+        "lastName": "Doe"
+      }
+      ```
+      - Optional Fields: `firstName`, `lastName`
 
 ### Users
 
