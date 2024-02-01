@@ -124,7 +124,7 @@ Timestamps `( createdAt, updatedAt )` are generated automatically once posts are
 1. **Login:**
     - Endpoint: `POST /auth/login`
     - Description: Authenticate and obtain a JWT token provided by `Local Strategy`, which is the default one
- - Request Body:
+ 	- Request Body:
       ```json
       {
         "email": "user@example.com",
