@@ -90,7 +90,12 @@ Timestamps `( createdAt, updatedAt )` are generated automatically once posts are
 1. **Add Comment:**
     - Endpoint: `POST /comments/add-comment/:postId`
     - Description: Add a comment to a specific post.
-    - Request Body:  ```json { "comment": "Your Comment Text" } ```
+    - Request Body:
+      ```json
+      {
+        "comment": "Your Comment Text"
+      }
+      ```
 
 2. **Update Comment:**
     - Endpoint: `PATCH /comments/update-comment/:commentId`
