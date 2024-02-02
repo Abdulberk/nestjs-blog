@@ -75,7 +75,7 @@ Timestamps `( createdAt, updatedAt )` are generated automatically once posts are
 4. **Get One Post:**
     - Endpoint: `GET /posts/post/:id`
     - Description: Retrieve details of a specific post for an authenticated user.
-    - Request Body: ```json { "title": "Updated Post Title", "content": "Updated Post Content" } ```
+
 
 5. **Update Post:**
     - Endpoint: `PATCH /posts/update-post/:id`
